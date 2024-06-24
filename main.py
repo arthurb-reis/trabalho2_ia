@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 # Função para ler o CSV e preparar os dados
 def preparar_dados(csv_path):
@@ -33,10 +33,21 @@ def treinar_e_testar_modelo(X, y, modelo):
     # Fazer previsões no conjunto de teste
     y_pred = modelo.predict(X_test)
     
-    # Calcular a acurácia
+    # Calcular a acurácia, precisão e recall
     acurácia = accuracy_score(y_test, y_pred)
+    precisão = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
     
-    return acurácia
+    return acurácia, precisão, recall
+
+# Função para obter a importância das variáveis
+#def obter_importancia_variaveis(modelo, X):
+#    if hasattr(modelo, 'feature_importances_'):
+#        importancias = modelo.feature_importances_
+#        variaveis = X.columns
+#        return dict(zip(variaveis, importancias))
+#    else:
+#        return None
 
 # Caminho para o arquivo CSV
 csv_path = 'breast+cancer+wisconsin+diagnostic/wdbc.data'
@@ -54,5 +65,13 @@ modelos = {
 
 # Treinar e testar cada modelo
 for nome_modelo, modelo in modelos.items():
-    acurácia = treinar_e_testar_modelo(X, y, modelo)
-    print(f'A acurácia do modelo {nome_modelo} é: {acurácia:.2f}')
+    acurácia, precisão, recall = treinar_e_testar_modelo(X, y, modelo)
+    print(f'Acurácia do modelo {nome_modelo}: {acurácia:.2f}')
+    print(f'Precisão do modelo {nome_modelo}: {precisão:.2f}')
+    print(f'Recall do modelo {nome_modelo}: {recall:.2f}')
+    
+    #importancias = obter_importancia_variaveis(modelo, X)
+    #if importancias:
+        #print(f'Importância das variáveis para o modelo {nome_modelo}:')
+        #for var, imp in importancias.items():
+            #print(f'{var}: {imp:.4f}')
